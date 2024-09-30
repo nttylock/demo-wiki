@@ -1,59 +1,58 @@
-# Поисковое приложение по Википедии
+# Wikipedia Search Application
 
-Это приложение позволяет выполнять поиск по базе данных Википедии с использованием векторного поиска и фильтрации по языку. Оно предоставляет веб-интерфейс и API для удобного использования.
+This application allows you to search a Wikipedia database using vector search and language filtering. It provides a web interface and API for convenient use.
 
-## Установка
+## Installation
 
-1. Убедитесь, что у вас установлен Python 3.7 или выше.
+1. Make sure you have Python 3.7 or higher installed.
 
-2. Клонируйте репозиторий:
+2. Clone the repository:
    ```
-   git clone <URL вашего репозитория>
-   cd <название директории>
+   git clone <your repository URL>
+   cd <directory name>
    ```
 
-3. Создайте виртуальное окружение и активируйте его:
+3. Create a virtual environment and activate it:
    ```
    python -m venv venv
-   source venv/bin/activate  # Для Linux и macOS
-   venv\Scripts\activate  # Для Windows
+   source venv/bin/activate  # For Linux and macOS
+   venv\Scripts\activate  # For Windows
    ```
 
-4. Установите зависимости:
+4. Install dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-## Запуск приложения
+## Running the Application
 
-1. Убедитесь, что вы находитесь в директории проекта и виртуальное окружение активировано.
+1. Make sure you are in the project directory and the virtual environment is activated.
 
-2. Запустите приложение:
+2. Run the application:
    ```
    python app.py
    ```
 
-3. Откройте веб-браузер и перейдите по адресу `http://localhost:5000`.
+3. Open a web browser and go to `http://localhost:5000`.
 
-## Использование веб-интерфейса
+## Using the Web Interface
 
-1. На главной странице введите поисковый запрос в текстовое поле.
-2. Нажмите кнопку "Поиск" или клавишу Enter.
-3. Просмотрите результаты поиска на странице результатов.
+1. On the main page, enter your search query in the text field.
+2. Click the "Search" button or press Enter.
+3. View the search results on the results page.
 
-## Подключение внешних проектов (использование API)
+## Connecting External Projects (Using the API)
 
-Вы можете использовать API этого приложения в своих внешних проектах. Для этого отправляйте POST-запросы на эндпоинт `/api/search`.
+You can use this application's API in your external projects. To do this, send POST requests to the `/api/search` endpoint.
 
-
-Пример использования API на Python:
+Example of using the API in Python:
 
 import requests
 
 url = "http://localhost:5000/api/search"
 data = {
-    "query": "искусственный интеллект",
-    "results_lang": "ru",
+    "query": "artificial intelligence",
+    "results_lang": "en",
     "num_results": 5
 }
 
@@ -61,8 +60,8 @@ response = requests.post(url, json=data)
 results = response.json()
 
 for result in results:
-    print(f"Заголовок: {result['title']}")
+    print(f"Title: {result['title']}")
     print(f"URL: {result['url']}")
-    print(f"Язык: {result['lang']}")
-    print(f"Дистанция: {result['_additional']['distance']}")
+    print(f"Language: {result['lang']}")
+    print(f"Distance: {result['_additional']['distance']}")
     print("---")
