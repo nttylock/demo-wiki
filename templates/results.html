@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты поиска</title>
+</head>
+<body>
+    <h1>Результаты поиска</h1>
+    {% if results %}
+        {% for article in results %}
+            <div>
+                <h2>{{ article.title }}</h2>
+                <p>URL: <a href="{{ article.url }}" target="_blank">{{ article.url }}</a></p>
+                <p>Язык: {{ article.lang }}</p>
+                <p>Дистанция: {{ article._additional.distance }}</p>
+                {% if loop.index == 1 %}
+                    <p>Краткое содержание: {{ article.text[:1000] }}</p>
+                {% endif %}
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>По вашему запросу ничего не найдено.</p>
+    {% endif %}
+    <a href="/">Новый поиск</a>
+</body>
+</html>

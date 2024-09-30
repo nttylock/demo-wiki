@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск по Википедии</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-2xl px-4">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Поиск по Википедии</h1>
+        <form id="searchForm" class="mb-8">
+            <div class="relative">
+                <input type="text" id="query" name="query" placeholder="Введите ваш поисковый запрос" required
+                       class="w-full px-4 py-2 text-gray-700 bg-white border rounded-full focus:outline-none focus:border-blue-500">
+                <button type="submit"
+                        class="absolute right-0 top-0 mt-2 mr-2 bg-blue-500 text-white rounded-full px-4 py-1 hover:bg-blue-600 focus:outline-none">
+                    Поиск
+                </button>
+            </div>
+        </form>
+        <div id="loadingBar" class="hidden w-full h-2 bg-gray-200 rounded-full mb-4">
+            <div class="w-0 h-full bg-blue-500 rounded-full transition-all duration-300 ease-out"></div>
+        </div>
+        <div id="results" class="space-y-4"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('searchForm');
+        const loadingBar = document.getElementById('loadingBar');
+        const resultsContainer = document.getElementById('results');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+            
+            loadingBar.classList.remove('hidden');
+            const progressBar = loadingBar.querySelector('div');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBar.style.width = `${Math.min(progress, 90)}%`;
+            }, 100);
+
+            try {
+                const response = await axios.post('/search', { query });
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    loadingBar.classList.add('hidden');
+                    displayResults(response.data);
+                }, 300);
+            } catch (error) {
+                console.error('Error:', error);
+                clearInterval(interval);
+                loadingBar.classList.add('hidden');
+                resultsContainer.innerHTML = '<p class="text-red-500">Произошла ошибка при поиске. Пожалуйста, попробуйте еще раз.</p>';
+            }
+        });
+
+        function displayResults(results) {
+            resultsContainer.innerHTML = '';
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-gray-600">По вашему запросу ничего не найдено.</p>';
+                return;
+            }
+            results.forEach((article, index) => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'bg-white p-4 rounded-lg shadow';
+                
+                let summaryText = '';
+                if (index === 0) {
+                    summaryText = article.text.length > 2000 
+                        ? article.text.substr(0, 2000) + '...'
+                        : article.text;
+                }
+                
+                articleElement.innerHTML = `
+                    <h2 class="text-xl font-semibold mb-2">${article.title}</h2>
+                    <p class="text-sm text-gray-600 mb-2">URL: <a href="${article.url}" target="_blank" class="text-blue-500 hover:underline">${article.url}</a></p>
+                    <p class="text-sm text-gray-600 mb-2">Язык: ${article.lang}</p>
+                    <p class="text-sm text-gray-600 mb-2">Дистанция: ${article._additional.distance.toFixed(4)}</p>
+                    ${index === 0 ? `<p class="text-sm text-gray-700 mt-2">Краткое содержание: ${summaryText}</p>` : ''}
+                `;
+                resultsContainer.appendChild(articleElement);
+            });
+        }
+    </script>
+</body>
+</html>
