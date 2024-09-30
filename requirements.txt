@@ -1,3 +1,4 @@
 cohere==4.32
 weaviate-client==3.25.3
 flask==2.3.2
+python-dotenv==1.0.0

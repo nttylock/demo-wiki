@@ -5,13 +5,18 @@ from weaviate.auth import AuthApiKey
 
 app = Flask(__name__)
 
-# Добавьте ваш Cohere API ключ
-cohere_api_key = "UT5M7dUrk6ZHAYCxsSQ5AoLLXNtjuAxNrIIHshGt"
+# Загружаем API ключ Cohere из переменных окружения
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+cohere_api_key = os.getenv("COHERE_API_KEY")
 
 co = cohere.Client(cohere_api_key)
 
 # Подключаемся к демонстрационной базе данных Weaviate, содержащей 10 млн векторов Википедии
-auth_config = AuthApiKey(api_key="76320a90-53d8-42bc-b41d-678647c6672e")
+weaviate_api_key = os.getenv("WEAVIATE_API_KEY")
+auth_config = AuthApiKey(api_key=weaviate_api_key)
 client = Client(
     url="https://cohere-demo.weaviate.network/",
     auth_client_secret=auth_config,

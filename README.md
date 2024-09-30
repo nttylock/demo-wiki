@@ -2,6 +2,8 @@
 
 This application allows you to search a Wikipedia database using vector search and language filtering. It provides a web interface and API for convenient use.
 
+Vector search is performed using the Cohere API, and the database is stored in Weaviate (Wikipedia 10M).
+
 ## Installation
 
 1. Make sure you have Python 3.7 or higher installed.
